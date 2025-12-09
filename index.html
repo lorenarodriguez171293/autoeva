@@ -1,0 +1,346 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Autoevaluación: Energías Alternativas (Secundaria)</title>
+  <style>
+    :root{--accent:#0b5fff;--bg:#f7f9fc;--card:#fff}
+    body{font-family:Inter,system-ui,Arial,Helvetica,sans-serif;background:var(--bg);margin:0;color:#222}
+    .wrap{max-width:900px;margin:28px auto;padding:20px}
+    header{display:flex;align-items:center;gap:16px}
+    h1{margin:0;font-size:1.4rem}
+    .card{background:var(--card);padding:18px;border-radius:12px;box-shadow:0 6px 18px rgba(16,24,40,0.06);margin-top:14px}
+    label{display:block;margin:8px 0 6px;font-weight:600}
+    .row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .full{grid-column:1/-1}
+    input[type=text],select,textarea{width:100%;padding:8px;border-radius:8px;border:1px solid #d7dbe6}
+    textarea{min-height:64px;resize:vertical}
+    .btn{background:var(--accent);color:#fff;padding:10px 14px;border-radius:10px;border:0;cursor:pointer}
+    .muted{color:#555;font-size:.9rem}
+    footer{margin-top:18px;display:flex;gap:8px;flex-wrap:wrap}
+    .admin-open{background:#eee;padding:8px;border-radius:8px;cursor:pointer}
+    table{width:100%;border-collapse:collapse;margin-top:12px}
+    th,td{padding:8px;border:1px solid #eee;font-size:.9rem}
+    .small{font-size:.85rem}
+    @media(max-width:720px){.row{grid-template-columns:1fr}}
+  </style>
+  <!-- SheetJS for XLSX export -->
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='48' viewBox='0 0 24 24'%3E%3Cpath fill='%230b5fff' d='M12 2L2 7l10 5 10-5-10-5zm0 7.5L4.5 7 12 3.5 19.5 7 12 9.5zM2 17l10 5 10-5v-2l-10 5-10-5v2z'/%3E%3C/svg%3E" alt="logo">
+      <div>
+        <h1>Autoevaluación: Energías Alternativas (Secundaria)</h1>
+        <div class="muted">Temas: Biocombustibles, Hidroeléctrica, Fotovoltaica, Eólica, Nuclear (Argentina)</div>
+      </div>
+    </header>
+
+    <form id="quizForm" class="card" onsubmit="handleSubmit(event)">
+      <div class="row">
+        <div>
+          <label for="studentName">Nombre y apellido</label>
+          <input id="studentName" name="studentName" type="text" required placeholder="Ej. Juan Pérez">
+        </div>
+        <div>
+          <label for="course">Curso / División</label>
+          <input id="course" name="course" type="text" required placeholder="Ej. 3°A">
+        </div>
+        <div class="full">
+          <label for="studentEmail">Correo (opcional)</label>
+          <input id="studentEmail" name="studentEmail" type="text" placeholder="opcional@escuela.edu.ar">
+        </div>
+
+        <!-- BIOCOMBUSTIBLES -->
+        <div class="full"><h3>Biocombustibles</h3></div>
+        <div class="full">
+          <label>1) ¿Cuál es una materia prima común para biodiésel en Argentina?</label>
+          <select id="b1" required>
+            <option value="">-- Elige --</option>
+            <option value="soja">Soja</option>
+            <option value="maiz">Maíz</option>
+            <option value="carb">Carbón</option>
+            <option value="gas">Gas natural</option>
+          </select>
+        </div>
+        <div class="full">
+          <label>2) Breve: Explica un beneficio y un desafío de los biocombustibles en Argentina.</label>
+          <textarea id="b2" placeholder="Respuesta corta..." required></textarea>
+        </div>
+
+        <!-- HIDROELECTRICA -->
+        <div class="full"><h3>Energía Hidroeléctrica</h3></div>
+        <div class="full">
+          <label>3) ¿Qué recurso es esencial para una central hidroeléctrica?</label>
+          <select id="h1" required>
+            <option value="">-- Elige --</option>
+            <option value="viento">Viento</option>
+            <option value="agua">Agua</option>
+            <option value="sol">Sol</option>
+            <option value="uranio">Uranio</option>
+          </select>
+        </div>
+        <div class="full">
+          <label>4) Breve: Menciona una ventaja ambiental y una desventaja social de represas.</label>
+          <textarea id="h2" required></textarea>
+        </div>
+
+        <!-- FOTOVOLTAICA -->
+        <div class="full"><h3>Fotovoltaica (solar)</h3></div>
+        <div class="full">
+          <label>5) ¿Qué convierte la radiación solar en electricidad?</label>
+          <select id="f1" required>
+            <option value="">-- Elige --</option>
+            <option value="paneles">Paneles fotovoltaicos</option>
+            <option value="turbina">Turbina eólica</option>
+            <option value="reactor">Reactor</option>
+            <option value="bateria">Batería</option>
+          </select>
+        </div>
+        <div class="full">
+          <label>6) Breve: ¿Qué ventaja tiene la energía fotovoltaica en muchas zonas de Argentina?</label>
+          <textarea id="f2" required></textarea>
+        </div>
+
+        <!-- EOLICA -->
+        <div class="full"><h3>Eólica</h3></div>
+        <div class="full">
+          <label>7) ¿Qué elemento convierte la energía del viento en electricidad?</label>
+          <select id="e1" required>
+            <option value="">-- Elige --</option>
+            <option value="aerogenerador">Aerogenerador (turbina)</option>
+            <option value="panel">Panel</option>
+            <option value="motor">Motor diésel</option>
+            <option value="celdas">Celdas de combustible</option>
+          </select>
+        </div>
+        <div class="full">
+          <label>8) Breve: ¿Por qué las provincias patagónicas son estratégicas para eólica?</label>
+          <textarea id="e2" required></textarea>
+        </div>
+
+        <!-- NUCLEAR -->
+        <div class="full"><h3>Nuclear</h3></div>
+        <div class="full">
+          <label>9) ¿Cuál es el combustible común en las plantas nucleares?</label>
+          <select id="n1" required>
+            <option value="">-- Elige --</option>
+            <option value="uranio">Uranio</option>
+            <option value="gasolina">Gasolina</option>
+            <option value="hidrogeno">Hidrógeno</option>
+            <option value="carb">Carbón</option>
+          </select>
+        </div>
+        <div class="full">
+          <label>10) Breve: Nombra un beneficio (energético) y un riesgo asociado a la energía nuclear.</label>
+          <textarea id="n2" required></textarea>
+        </div>
+
+        <!-- EXTRA MULTIPLE CHOICE -->
+        <div class="full"><h3>Preguntas adicionales</h3></div>
+
+        <div class="full">
+          <label>11) ¿Cuál de estas energías renovables tiene mayor presencia en la Patagonia?</label>
+          <select id="x1" required>
+            <option value="">-- Elige --</option>
+            <option value="eolica">Eólica</option>
+            <option value="solar">Solar</option>
+            <option value="biomasa">Biomasa</option>
+            <option value="nuclear">Nuclear</option>
+          </select>
+        </div>
+
+        <div class="full">
+          <label>12) ¿Cuál es una desventaja común de la energía solar?</label>
+          <select id="x2" required>
+            <option value="">-- Elige --</option>
+            <option value="intermitencia">Dependencia del clima / intermitencia</option>
+            <option value="altoconsumo">Alto consumo de agua</option>
+            <option value="radiacion">Genera radiación peligrosa</option>
+            <option value="deforestacion">Produce deforestación directa</option>
+          </select>
+        </div>
+
+        <div class="full">
+          <label>13) ¿Qué tipo de energía se obtiene del movimiento del agua?</label>
+          <select id="x3" required>
+            <option value="">-- Elige --</option>
+            <option value="hidroelectrica">Hidroeléctrica</option>
+            <option value="geotermica">Geotérmica</option>
+            <option value="fotovoltaica">Fotovoltaica</option>
+            <option value="eolica">Eólica</option>
+          </select>
+        </div>
+
+        <div class="full">
+          <label>14) ¿Qué factor favorece la instalación de parques solares en el NOA?</label>
+          <select id="x4" required>
+            <option value="">-- Elige --</option>
+            <option value="altaRadiacion">Alta radiación solar anual</option>
+            <option value="muchoViento">Vientos constantes</option>
+            <option value="granFluvial">Abundancia de ríos</option>
+            <option value="bajaInsolacion">Baja insolación</option>
+          </select>
+        </div>
+
+        <div class="full">
+          <label>15) ¿Cuál es una preocupación frecuente relacionada con la energía nuclear?</label>
+          <select id="x5" required>
+            <option value="">-- Elige --</option>
+            <option value="residuos">Manejo de residuos radiactivos</option>
+            <option value="nubeToxica">Generación constante de nubes tóxicas</option>
+            <option value="deforestacion">Alta deforestación</option>
+            <option value="bajapotencia">Baja potencia energética</option>
+          </select>
+        </div>
+
+        <!-- PREGUNTAS ABIERTAS AVANZADAS -->
+        <div class="full"><h3>Preguntas abiertas (mayor compromiso cognitivo)</h3></div>
+
+        <div class="full">
+          <label>16) Explica cómo la combinación de energías renovables podría mejorar la matriz energética argentina en los próximos 20 años.</label>
+          <textarea id="o1" required></textarea>
+        </div>
+
+        <div class="full">
+          <label>17) Analiza una posible consecuencia ambiental negativa de expandir grandes represas hidroeléctricas y propone una alternativa sostenible.</label>
+          <textarea id="o2" required></textarea>
+        </div>
+
+        <div class="full">
+          <label>18) Compara el impacto social de instalar un parque eólico versus una planta solar en una comunidad rural.</label>
+          <textarea id="o3" required></textarea>
+        </div>
+
+        <div class="full">
+          <label>19) Explica por qué la transición energética requiere no solo tecnología, sino también políticas públicas y cambios culturales.</label>
+          <textarea id="o4" required></textarea>
+        </div>
+
+        <div class="full">
+          <label>20) Desde tu punto de vista, ¿qué rol debería tener la energía nuclear en la Argentina del futuro? Justifica tu respuesta con argumentos técnicos o sociales.</label>
+          <textarea id="o5" required></textarea>
+        </div>
+    </div>
+
+    <div id="msg" style="margin-top:12px"></div>
+  </div>
+
+  <script>
+    // Configuración simple (cambiar según convenga)
+    const ADMIN_PASSWORD = 'educativa123'; // Cambiar antes de usar en producción
+    const STORAGE_KEY = 'submissions_alt_energies_v1';
+
+    // Cargar envíos previos
+    function loadSubmissions(){
+      try{
+        return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+      }catch(e){return []}
+    }
+    function saveSubmissions(arr){ localStorage.setItem(STORAGE_KEY, JSON.stringify(arr)); }
+
+    // Manejo de envío
+    function handleSubmit(ev){
+      ev.preventDefault();
+      const data = {
+        timestamp: new Date().toISOString(),
+        name: document.getElementById('studentName').value.trim(),
+        course: document.getElementById('course').value.trim(),
+        email: document.getElementById('studentEmail').value.trim(),
+        b1: document.getElementById('b1').value,
+        b2: document.getElementById('b2').value.trim(),
+        h1: document.getElementById('h1').value,
+        h2: document.getElementById('h2').value.trim(),
+        f1: document.getElementById('f1').value,
+        f2: document.getElementById('f2').value.trim(),
+        e1: document.getElementById('e1').value,
+        e2: document.getElementById('e2').value.trim(),
+        n1: document.getElementById('n1').value,
+        n2: document.getElementById('n2').value.trim()
+      };
+
+      const subs = loadSubmissions();
+      subs.push(data);
+      saveSubmissions(subs);
+
+      // Ofrecer descarga inmediata del registro individual en CSV
+      downloadCSV([data], `respuesta_${data.name.replace(/\s+/g,'_') || 'anonimo'}_${(new Date()).toISOString().slice(0,19)}.csv`);
+
+      document.getElementById('msg').innerHTML = `<div class='card'><strong>Gracias, ${data.name}.</strong> Tu respuesta se guardó localmente y se descargó una copia en CSV.</div>`;
+      document.getElementById('quizForm').reset();
+    }
+
+    // CSV helpers
+    function escapeCSV(val){ if(val==null) return ''; return '"'+String(val).replace(/"/g,'""')+'"'; }
+    function downloadCSV(rows, filename='respuestas.csv'){
+      if(!rows || rows.length===0) return;
+      const headers = Object.keys(rows[0]);
+      const lines = [headers.map(escapeCSV).join(',')];
+      for(const r of rows){
+        lines.push(headers.map(h=>escapeCSV(r[h])).join(','));
+      }
+      const csv = lines.join('\n');
+      const blob = new Blob([csv], {type:'text/csv;charset=utf-8;'});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a'); a.href = url; a.download = filename; document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(()=>URL.revokeObjectURL(url),2000);
+    }
+
+    // XLSX (SheetJS) export
+    function downloadXLSX(rows, filename='respuestas.xlsx'){
+      if(!rows || rows.length===0) return;
+      const ws = XLSX.utils.json_to_sheet(rows);
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, 'Respuestas');
+      XLSX.writeFile(wb, filename);
+    }
+
+    // Admin panel
+    function openAdmin(){
+      document.getElementById('adminPanel').style.display = 'block';
+      document.getElementById('adminPass').value = '';
+      document.getElementById('adminContent').style.display = 'none';
+      document.getElementById('tableWrap').innerHTML = '';
+      window.scrollTo({top:document.getElementById('adminPanel').offsetTop, behavior:'smooth'});
+    }
+    function unlockAdmin(){
+      const pass = document.getElementById('adminPass').value;
+      if(pass !== ADMIN_PASSWORD){ alert('Clave incorrecta'); return; }
+      document.getElementById('adminContent').style.display = 'block';
+      renderTable();
+    }
+
+    function renderTable(){
+      const subs = loadSubmissions();
+      if(subs.length===0){ document.getElementById('tableWrap').innerHTML = '<div class="muted">No hay respuestas registradas.</div>'; return; }
+      const headers = Object.keys(subs[0]);
+      let html = '<table><thead><tr>' + headers.map(h=>`<th>${h}</th>`).join('') + '</tr></thead><tbody>';
+      for(const r of subs){ html += '<tr>' + headers.map(h=>`<td>${(r[h]||'').toString().replace(/</g,'&lt;')}</td>`).join('') + '</tr>'; }
+      html += '</tbody></table>';
+      document.getElementById('tableWrap').innerHTML = html;
+    }
+
+    function downloadCSVAll(){
+      const subs = loadSubmissions();
+      if(subs.length===0){ alert('No hay respuestas para descargar.'); return; }
+      downloadCSV(subs, `todas_respuestas_energias_${(new Date()).toISOString().slice(0,10)}.csv`);
+    }
+    function downloadXLSXAll(){
+      const subs = loadSubmissions();
+      if(subs.length===0){ alert('No hay respuestas para descargar.'); return; }
+      downloadXLSX(subs, `todas_respuestas_energias_${(new Date()).toISOString().slice(0,10)}.xlsx`);
+    }
+
+    function clearSubmissions(){
+      if(!confirm('¿Borrar todas las respuestas registradas? Esta acción no se puede deshacer.')) return;
+      localStorage.removeItem(STORAGE_KEY);
+      renderTable();
+      alert('Respuestas borradas.');
+    }
+
+    // Init: nothing to do
+  </script>
+</body>
+</html>
