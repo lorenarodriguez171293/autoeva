@@ -1,305 +1,106 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Autoevaluación: Energías Alternativas</title>
-  <style>
-    :root{--accent:#0b5fff;--bg:#f7f9fc;--card:#fff}
-    body{font-family:Inter,system-ui,Arial,Helvetica,sans-serif;background:var(--bg);margin:0;color:#222}
-    .wrap{max-width:900px;margin:28px auto;padding:20px}
-    header{display:flex;align-items:center;gap:16px}
-    h1{margin:0;font-size:1.4rem}
-    .card{background:var(--card);padding:18px;border-radius:12px;box-shadow:0 6px 18px rgba(16,24,40,0.06);margin-top:14px}
-    label{display:block;margin:8px 0 6px;font-weight:600}
-    .row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-    .full{grid-column:1/-1}
-    input[type=text],select,textarea{width:100%;padding:8px;border-radius:8px;border:1px solid #d7dbe6}
-    textarea{min-height:64px;resize:vertical}
-    .btn{background:var(--accent);color:#fff;padding:10px 14px;border-radius:10px;border:0;cursor:pointer}
-    .muted{color:#555;font-size:.9rem}
-    footer{margin-top:18px;display:flex;gap:8px;flex-wrap:wrap}
-    .admin-open{background:#eee;padding:8px;border-radius:8px;cursor:pointer}
-    table{width:100%;border-collapse:collapse;margin-top:12px}
-    th,td{padding:8px;border:1px solid #eee;font-size:.9rem}
-    .small{font-size:.85rem}
-    @media(max-width:720px){.row{grid-template-columns:1fr}}
-  </style>
-
-  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    <meta charset="UTF-8">
+    <title>Autoevaluación Energías Alternativas</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        h1 { color: #2b6cb0; }
+        .question { margin-bottom: 20px; }
+        button { padding: 10px 15px; margin-top: 20px; }
+        #result { font-size: 1.3em; font-weight: bold; margin-top: 20px; }
+    </style>
 </head>
 
 <body>
-  <div class="wrap">
-    <header>
-      <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='48' viewBox='0 0 24 24'%3E%3Cpath fill='%230b5fff' d='M12 2L2 7l10 5 10-5-10-5zm0 7.5L4.5 7 12 3.5 19.5 7 12 9.5zM2 17l10 5 10-5v-2l-10 5-10-5v2z'/%3E%3C/svg%3E">
-      <div>
-        <h1>Autoevaluación: Energías Alternativas</h1>
-        <div class="muted">Temas: Biocombustibles, Hidroeléctrica, Fotovoltaica, Eólica, Nuclear</div>
-      </div>
-    </header>
 
-    <form id="quizForm" class="card" onsubmit="handleSubmit(event)">
-      <div class="row">
+<h1>Autoevaluación sobre Energías Alternativas</h1>
 
-        <!-- DATOS -->
-        <div>
-          <label>Nombre y apellido</label>
-          <input id="studentName" required>
-        </div>
-        <div>
-          <label>Curso / División</label>
-          <input id="course" required>
-        </div>
-        <div class="full">
-          <label>Correo (opcional)</label>
-          <input id="studentEmail">
-        </div>
+<label>Tu nombre:</label><br>
+<input type="text" id="nombre" placeholder="Escribe tu nombre" required><br><br>
 
-        <!-- BIOCOMBUSTIBLES -->
-        <div class="full"><h3>Biocombustibles</h3></div>
-        <div class="full">
-          <label>1) ¿Materia prima común para biodiésel?</label>
-          <select id="b1" required>
-            <option value="">-- Elige --</option>
-            <option value="soja">Soja</option>
-            <option value="maiz">Maíz</option>
-            <option value="carb">Carbón</option>
-            <option value="gas">Gas natural</option>
-          </select>
-        </div>
-        <div class="full">
-          <label>2) Beneficio + desafío de biocombustibles</label>
-          <textarea id="b2" required></textarea>
-        </div>
+<form id="quiz">
 
-        <!-- HIDROELECTRICA -->
-        <div class="full"><h3>Hidroeléctrica</h3></div>
-        <div class="full">
-          <label>3) Recurso esencial</label>
-          <select id="h1" required>
-            <option value="">-- Elige --</option>
-            <option value="viento">Viento</option>
-            <option value="agua">Agua</option>
-            <option value="sol">Sol</option>
-            <option value="uranio">Uranio</option>
-          </select>
-        </div>
-        <div class="full">
-          <label>4) Ventaja ambiental + desventaja social</label>
-          <textarea id="h2" required></textarea>
-        </div>
+    <div class="question">
+        <p>1. ¿Qué central argentina es conocida por su energía nuclear?</p>
+        <label><input type="radio" name="q1" value="correcto"> Atucha</label><br>
+        <label><input type="radio" name="q1" value="incorrecto"> El Chocón</label><br>
+        <label><input type="radio" name="q1" value="incorrecto"> Cauchari</label>
+    </div>
 
-        <!-- FOTOVOLTAICA -->
-        <div class="full"><h3>Fotovoltaica</h3></div>
-        <div class="full">
-          <label>5) ¿Qué convierte radiación en electricidad?</label>
-          <select id="f1" required>
-            <option value="">-- Elige --</option>
-            <option value="paneles">Paneles fotovoltaicos</option>
-            <option value="turbina">Turbina</option>
-            <option value="reactor">Reactor</option>
-            <option value="bateria">Batería</option>
-          </select>
-        </div>
-        <div class="full">
-          <label>6) Ventaja de la solar en Argentina</label>
-          <textarea id="f2" required></textarea>
-        </div>
+    <div class="question">
+        <p>2. ¿Qué energía proviene de residuos orgánicos?</p>
+        <label><input type="radio" name="q2" value="correcto"> Biocombustible</label><br>
+        <label><input type="radio" name="q2" value="incorrecto"> Eólica</label><br>
+        <label><input type="radio" name="q2" value="incorrecto"> Nuclear</label>
+    </div>
 
-        <!-- EOLICA -->
-        <div class="full"><h3>Eólica</h3></div>
-        <div class="full">
-          <label>7) Elemento principal</label>
-          <select id="e1" required>
-            <option value="">-- Elige --</option>
-            <option value="aerogenerador">Aerogenerador</option>
-            <option value="panel">Panel</option>
-            <option value="motor">Motor diésel</option>
-            <option value="celdas">Celdas</option>
-          </select>
-        </div>
-        <div class="full">
-          <label>8) ¿Por qué Patagonia es estratégica?</label>
-          <textarea id="e2" required></textarea>
-        </div>
+    <div class="question">
+        <p>3. Ejemplo importante de energía hidroeléctrica en Argentina:</p>
+        <label><input type="radio" name="q3" value="correcto"> Yacyretá</label><br>
+        <label><input type="radio" name="q3" value="incorrecto"> Atucha II</label><br>
+        <label><input type="radio" name="q3" value="incorrecto"> Cañadón León</label>
+    </div>
 
-        <!-- NUCLEAR -->
-        <div class="full"><h3>Nuclear</h3></div>
-        <div class="full">
-          <label>9) Combustible común</label>
-          <select id="n1" required>
-            <option value="">-- Elige --</option>
-            <option value="uranio">Uranio</option>
-            <option value="gasolina">Gasolina</option>
-            <option value="hidrogeno">Hidrógeno</option>
-            <option value="carb">Carbón</option>
-          </select>
-        </div>
-        <div class="full">
-          <label>10) Beneficio + riesgo</label>
-          <textarea id="n2" required></textarea>
-        </div>
+    <div class="question">
+        <p>4. ¿Qué provincia tiene un gran parque solar?</p>
+        <label><input type="radio" name="q4" value="correcto"> Jujuy</label><br>
+        <label><input type="radio" name="q4" value="incorrecto"> Santa Cruz</label><br>
+        <label><input type="radio" name="q4" value="incorrecto"> Corrientes</label>
+    </div>
 
-        <!-- MULTIPLE CHOICE EXTRA -->
-        <div class="full"><h3>Preguntas adicionales</h3></div>
-        <div class="full">
-          <label>11) Energía con mayor presencia en Patagonia</label>
-          <select id="x1" required>
-            <option value="">-- Elige --</option>
-            <option value="eolica">Eólica</option>
-            <option value="solar">Solar</option>
-            <option value="biomasa">Biomasa</option>
-            <option value="nuclear">Nuclear</option>
-          </select>
-        </div>
+    <div class="question">
+        <p>5. ¿Qué región es líder en energía eólica?</p>
+        <label><input type="radio" name="q5" value="correcto"> Patagonia</label><br>
+        <label><input type="radio" name="q5" value="incorrecto"> Cuyo</label><br>
+        <label><input type="radio" name="q5" value="incorrecto"> NEA</label>
+    </div>
 
-        <div class="full">
-          <label>12) Desventaja común de la solar</label>
-          <select id="x2" required>
-            <option value="">-- Elige --</option>
-            <option value="intermitencia">Intermitencia</option>
-            <option value="altoconsumo">Alto consumo de agua</option>
-            <option value="radiacion">Radiación peligrosa</option>
-            <option value="deforestacion">Deforestación</option>
-          </select>
-        </div>
+    <button type="button" onclick="calcular()">Enviar</button>
+</form>
 
-        <div class="full">
-          <label>13) Energía obtenida del agua en movimiento</label>
-          <select id="x3" required>
-            <option value="">-- Elige --</option>
-            <option value="hidroelectrica">Hidroeléctrica</option>
-            <option value="geotermica">Geotérmica</option>
-            <option value="fotovoltaica">Fotovoltaica</option>
-            <option value="eolica">Eólica</option>
-          </select>
-        </div>
-
-        <div class="full">
-          <label>14) Factor que favorece solares en el NOA</label>
-          <select id="x4" required>
-            <option value="">-- Elige --</option>
-            <option value="altaRadiacion">Alta radiación</option>
-            <option value="muchoViento">Mucho viento</option>
-            <option value="granFluvial">Abundancia de ríos</option>
-            <option value="bajaInsolacion">Baja insolación</option>
-          </select>
-        </div>
-
-        <div class="full">
-          <label>15) Preocupación frecuente sobre nuclear</label>
-          <select id="x5" required>
-            <option value="">-- Elige --</option>
-            <option value="residuos">Manejo de residuos</option>
-            <option value="nubeToxica">Nubes tóxicas</option>
-            <option value="deforestacion">Deforestación</option>
-            <option value="bajapotencia">Baja potencia</option>
-          </select>
-        </div>
-
-        <!-- REFLEXIÓN -->
-        <div class="full"><h3>Piensa y responde</h3></div>
-        <div class="full">
-          <label>16)</label>
-          <textarea id="o1" required></textarea>
-        </div>
-
-        <div class="full">
-          <label>17)</label>
-          <textarea id="o2" required></textarea>
-        </div>
-
-        <div class="full">
-          <label>18)</label>
-          <textarea id="o3" required></textarea>
-        </div>
-
-        <div class="full">
-          <label>19)</label>
-          <textarea id="o4" required></textarea>
-        </div>
-
-        <div class="full">
-          <label>20)</label>
-          <textarea id="o5" required></textarea>
-        </div>
-      </div>
-
-      <div id="msg" style="margin-top:12px"></div>
-    </form>
-  </div>
+<p id="result"></p>
 
 <script>
-  const APPS_SCRIPT_URL = "PON_AQUI_LA_URL_DEL_DEPLOY";
-  const SECRET_TOKEN = "T0k3n_S3gur0_2024";
+function calcular() {
+    let score = 0;
+    let respuestas = [];
+    const nombre = document.getElementById("nombre").value;
 
-  function loadSubmissions(){
-    try { return JSON.parse(localStorage.getItem('submissions_alt_energies_v1') || '[]'); }
-    catch(e){ return []; }
-  }
-  function saveSubmissions(arr){
-    localStorage.setItem('submissions_alt_energies_v1', JSON.stringify(arr));
-  }
+    if (nombre.trim() === "") {
+        alert("Por favor ingresá tu nombre.");
+        return;
+    }
 
-  function escapeCSV(val){
-    if(val==null) return '';
-    return '"' + String(val).replace(/"/g,'""') + '"';
-  }
+    for (let i = 1; i <= 5; i++) {
+        const seleccion = document.querySelector(`input[name="q${i}"]:checked`);
+        if (!seleccion) continue;
 
-  function downloadCSV(rows, filename){
-    if(!rows.length) return;
-    const headers = Object.keys(rows[0]);
-    const lines = [headers.map(escapeCSV).join(',')];
-    for(const r of rows){ lines.push(headers.map(h=>escapeCSV(r[h])).join(',')); }
-    const blob = new Blob([lines.join('\n')], {type:'text/csv;charset=utf-8;'});
-    const a = document.createElement('a');
-    a.href = URL.createObjectURL(blob);
-    a.download = filename;
-    a.click();
-  }
+        const correcta = (seleccion.value === "correcto");
+        if (correcta) score++;
 
-  function handleSubmit(ev){
-    ev.preventDefault();
+        respuestas.push({
+            pregunta: `Pregunta ${i}`,
+            respuesta: seleccion.parentNode.innerText,
+            correcta: correcta
+        });
+    }
 
-    const data = {
-      __token: SECRET_TOKEN,
-      timestamp: new Date().toISOString(),
-      name: studentName.value.trim(),
-      course: course.value.trim(),
-      email: studentEmail.value.trim(),
+    document.getElementById("result").innerHTML = 
+        "Tu puntaje es: " + score + " / 5";
 
-      b1: b1.value, b2: b2.value.trim(),
-      h1: h1.value, h2: h2.value.trim(),
-      f1: f1.value, f2: f2.value.trim(),
-      e1: e1.value, e2: e2.value.trim(),
-      n1: n1.value, n2: n2.value.trim(),
-
-      x1: x1.value, x2: x2.value, x3: x3.value, x4: x4.value, x5: x5.value,
-
-      o1: o1.value.trim(), o2: o2.value.trim(), 
-      o3: o3.value.trim(), o4: o4.value.trim(), 
-      o5: o5.value.trim()
-    };
-
-    const subs = loadSubmissions();
-    subs.push(data);
-    saveSubmissions(subs);
-
-    downloadCSV([data], `respuesta_${data.name}_${new Date().toISOString().slice(0,19)}.csv`);
-
-    msg.innerHTML = `<div class='card'><strong>Gracias, ${data.name}.</strong> Tu respuesta fue enviada y recibirás una copia si dejaste correo.</div>`;
-    quizForm.reset();
-
-    fetch(APPS_SCRIPT_URL, {
-      method: "POST",
-      headers: {"Content-Type": "application/json"},
-      body: JSON.stringify(data)
+    fetch("guardar_respuestas.php", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({
+            nombre: nombre,
+            puntaje: score,
+            respuestas: respuestas
+        })
     })
     .then(r => r.text())
-    .then(t => console.log("Apps Script respondió:", t))
-    .catch(err => console.error("Error al enviar:", err));
-  }
+    .then(alert);
+}
 </script>
 
 </body>
