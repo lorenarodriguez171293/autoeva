@@ -1,105 +1,187 @@
+<!-- index.html -->
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Autoevaluación Energías Alternativas</title>
+    <title>Autoevaluación: Energías Alternativas</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
     <style>
-        body { font-family: Arial, sans-serif; margin: 20px; }
-        h1 { color: #2b6cb0; }
-        .question { margin-bottom: 20px; }
-        button { padding: 10px 15px; margin-top: 20px; }
-        #result { font-size: 1.3em; font-weight: bold; margin-top: 20px; }
+        body { font-family: Arial, sans-serif; margin: 20px; max-width: 900px; }
+        h1 { color:#1f6feb; }
+        .question { margin-bottom: 14px; padding: 8px; border-radius:6px; background:#f7f9fc; }
+        label { display:block; margin:4px 0; }
+        input[type="text"] { width: 100%; padding:8px; margin-bottom:12px; }
+        button { padding:10px 16px; background:#1f6feb;color:white;border:none;border-radius:6px;cursor:pointer; }
+        #result { margin-top:16px; font-weight:bold; }
     </style>
 </head>
-
 <body>
 
-<h1>Autoevaluación sobre Energías Alternativas</h1>
+<h1>Autoevaluación: Energías Alternativas (Argentina)</h1>
+<p>Completá con tu nombre y respondé las 15 preguntas.</p>
 
-<label>Tu nombre:</label><br>
-<input type="text" id="nombre" placeholder="Escribe tu nombre" required><br><br>
+<input type="text" id="nombre" placeholder="Tu nombre completo">
 
 <form id="quiz">
-
+    <!-- 15 preguntas -->
+    <!-- Cada pregunta: value "correcto" o "incorrecto" -->
+    <!-- Breves enunciados y opciones relacionadas con Argentina -->
     <div class="question">
-        <p>1. ¿Qué central argentina es conocida por su energía nuclear?</p>
-        <label><input type="radio" name="q1" value="correcto"> Atucha</label><br>
-        <label><input type="radio" name="q1" value="incorrecto"> El Chocón</label><br>
+        <strong>1.</strong> ¿Qué central argentina es conocida por su energía nuclear?
+        <label><input type="radio" name="q1" value="correcto"> Atucha</label>
+        <label><input type="radio" name="q1" value="incorrecto"> El Chocón</label>
         <label><input type="radio" name="q1" value="incorrecto"> Cauchari</label>
     </div>
 
     <div class="question">
-        <p>2. ¿Qué energía proviene de residuos orgánicos?</p>
-        <label><input type="radio" name="q2" value="correcto"> Biocombustible</label><br>
-        <label><input type="radio" name="q2" value="incorrecto"> Eólica</label><br>
+        <strong>2.</strong> ¿Qué tipo de energía proviene de residuos orgánicos o cultivos?
+        <label><input type="radio" name="q2" value="correcto"> Biocombustible / biomasa</label>
+        <label><input type="radio" name="q2" value="incorrecto"> Solar térmica</label>
         <label><input type="radio" name="q2" value="incorrecto"> Nuclear</label>
     </div>
 
     <div class="question">
-        <p>3. Ejemplo importante de energía hidroeléctrica en Argentina:</p>
-        <label><input type="radio" name="q3" value="correcto"> Yacyretá</label><br>
-        <label><input type="radio" name="q3" value="incorrecto"> Atucha II</label><br>
-        <label><input type="radio" name="q3" value="incorrecto"> Cañadón León</label>
+        <strong>3.</strong> ¿Cuál es una represa hidroeléctrica importante en Argentina?
+        <label><input type="radio" name="q3" value="correcto"> Yacyretá</label>
+        <label><input type="radio" name="q3" value="incorrecto"> Atucha II</label>
+        <label><input type="radio" name="q3" value="incorrecto"> Parque Eólico Rawson</label>
     </div>
 
     <div class="question">
-        <p>4. ¿Qué provincia tiene un gran parque solar?</p>
-        <label><input type="radio" name="q4" value="correcto"> Jujuy</label><br>
-        <label><input type="radio" name="q4" value="incorrecto"> Santa Cruz</label><br>
-        <label><input type="radio" name="q4" value="incorrecto"> Corrientes</label>
+        <strong>4.</strong> ¿Qué provincia tiene grandes proyectos fotovoltaicos como Cauchari?
+        <label><input type="radio" name="q4" value="correcto"> Jujuy</label>
+        <label><input type="radio" name="q4" value="incorrecto"> La Pampa</label>
+        <label><input type="radio" name="q4" value="incorrecto"> Buenos Aires</label>
     </div>
 
     <div class="question">
-        <p>5. ¿Qué región es líder en energía eólica?</p>
-        <label><input type="radio" name="q5" value="correcto"> Patagonia</label><br>
-        <label><input type="radio" name="q5" value="incorrecto"> Cuyo</label><br>
+        <strong>5.</strong> ¿Qué región argentina tiene un gran potencial eólico?
+        <label><input type="radio" name="q5" value="correcto"> Patagonia</label>
         <label><input type="radio" name="q5" value="incorrecto"> NEA</label>
+        <label><input type="radio" name="q5" value="incorrecto"> Cuyo</label>
     </div>
 
-    <button type="button" onclick="calcular()">Enviar</button>
+    <div class="question">
+        <strong>6.</strong> ¿Qué componente transforma luz solar en electricidad en sistemas fotovoltaicos?
+        <label><input type="radio" name="q6" value="correcto"> Paneles solares</label>
+        <label><input type="radio" name="q6" value="incorrecto"> Turbinas</label>
+        <label><input type="radio" name="q6" value="incorrecto"> Receptores de calor</label>
+    </div>
+
+    <div class="question">
+        <strong>7.</strong> ¿Qué se usa en bioetanol para producir biocombustible?
+        <label><input type="radio" name="q7" value="correcto"> Cultivos ricos en azúcar o almidón</label>
+        <label><input type="radio" name="q7" value="incorrecto"> Agua de mar</label>
+        <label><input type="radio" name="q7" value="incorrecto"> Uranio</label>
+    </div>
+
+    <div class="question">
+        <strong>8.</strong> ¿Cuál es un beneficio de la energía eólica?
+        <label><input type="radio" name="q8" value="correcto"> No emite gases de efecto invernadero durante operación</label>
+        <label><input type="radio" name="q8" value="incorrecto"> Produce residuos radiactivos</label>
+        <label><input type="radio" name="q8" value="incorrecto"> Requiere combustibles fósiles</label>
+    </div>
+
+    <div class="question">
+        <strong>9.</strong> ¿Qué país vecino también explota grandes hidroeléctricas compartidas con Argentina?
+        <label><input type="radio" name="q9" value="correcto"> Paraguay</label>
+        <label><input type="radio" name="q9" value="incorrecto"> Uruguay</label>
+        <label><input type="radio" name="q9" value="incorrecto"> Chile</label>
+    </div>
+
+    <div class="question">
+        <strong>10.</strong> ¿Qué nombre recibe la energía producida por la fisión de átomos (nuclear)?
+        <label><input type="radio" name="q10" value="correcto"> Energía nuclear</label>
+        <label><input type="radio" name="q10" value="incorrecto"> Energía undimotriz</label>
+        <label><input type="radio" name="q10" value="incorrecto"> Energía mareomotriz</label>
+    </div>
+
+    <div class="question">
+        <strong>11.</strong> ¿Qué factor afecta la eficiencia de paneles fotovoltaicos?
+        <label><input type="radio" name="q11" value="correcto"> Radiación solar disponible</label>
+        <label><input type="radio" name="q11" value="incorrecto"> Altura del nivel del mar sin sol</label>
+        <label><input type="radio" name="q11" value="incorrecto"> Dirección del viento solamente</label>
+    </div>
+
+    <div class="question">
+        <strong>12.</strong> ¿Qué desventaja se asocia a algunos biocombustibles?
+        <label><input type="radio" name="q12" value="correcto"> Competencia por tierras agrícolas</label>
+        <label><input type="radio" name="q12" value="incorrecto"> Generan residuos radiactivos</label>
+        <label><input type="radio" name="q12" value="incorrecto"> Dependen del viento</label>
+    </div>
+
+    <div class="question">
+        <strong>13.</strong> ¿Cuál es una ventaja de la energía hidroeléctrica?
+        <label><input type="radio" name="q13" value="correcto"> Almacenamiento y regulación con embalses</label>
+        <label><input type="radio" name="q13" value="incorrecto"> Fácil transporte por tuberías</label>
+        <label><input type="radio" name="q13" value="incorrecto"> No necesita obras civiles</label>
+    </div>
+
+    <div class="question">
+        <strong>14.</strong> ¿Qué material se emplea como combustible nuclear?
+        <label><input type="radio" name="q14" value="correcto"> Uranio</label>
+        <label><input type="radio" name="q14" value="incorrecto"> Gas natural</label>
+        <label><input type="radio" name="q14" value="incorrecto"> Biodiesel</label>
+    </div>
+
+    <div class="question">
+        <strong>15.</strong> ¿Qué política ayuda a impulsar energías renovables?
+        <label><input type="radio" name="q15" value="correcto"> Incentivos / subsidios y marcos regulatorios</label>
+        <label><input type="radio" name="q15" value="incorrecto"> Prohibición de instalaciones</label>
+        <label><input type="radio" name="q15" value="incorrecto"> Aumento de impuestos a empresas renovables</label>
+    </div>
+
+    <button type="button" onclick="calcular()">Enviar respuestas</button>
 </form>
 
 <p id="result"></p>
 
 <script>
-function calcular() {
-    let score = 0;
-    let respuestas = [];
-    const nombre = document.getElementById("nombre").value;
+function obtenerTextoSeleccionado(radio) {
+    // devuelve texto de la etiqueta contenedora
+    return radio ? radio.parentNode.innerText.trim() : "";
+}
 
-    if (nombre.trim() === "") {
-        alert("Por favor ingresá tu nombre.");
+function calcular() {
+    const nombre = document.getElementById('nombre').value.trim();
+    if (!nombre) {
+        alert('Ingresá tu nombre antes de enviar.');
         return;
     }
 
-    for (let i = 1; i <= 5; i++) {
-        const seleccion = document.querySelector(`input[name="q${i}"]:checked`);
-        if (!seleccion) continue;
+    let puntaje = 0;
+    let respuestas = [];
 
-        const correcta = (seleccion.value === "correcto");
-        if (correcta) score++;
-
+    for (let i = 1; i <= 15; i++) {
+        const sel = document.querySelector(`input[name="q${i}"]:checked`);
+        const texto = obtenerTextoSeleccionado(sel);
+        const correcta = sel && sel.value === 'correcto';
+        if (correcta) puntaje++;
         respuestas.push({
             pregunta: `Pregunta ${i}`,
-            respuesta: seleccion.parentNode.innerText,
+            respuesta: texto || '',
             correcta: correcta
         });
     }
 
-    document.getElementById("result").innerHTML = 
-        "Tu puntaje es: " + score + " / 5";
+    document.getElementById('result').innerText = `Tu puntaje: ${puntaje} / 15`;
 
-    fetch("guardar_respuestas.php", {
-        method: "POST",
-        headers: {"Content-Type": "application/json"},
+    // Enviar al servidor
+    fetch('guardar_respuestas.php', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({
             nombre: nombre,
-            puntaje: score,
+            puntaje: puntaje,
             respuestas: respuestas
         })
     })
     .then(r => r.text())
-    .then(alert);
+    .then(txt => alert(txt))
+    .catch(err => {
+        console.error(err);
+        alert('Error al enviar. Intentá nuevamente.');
+    });
 }
 </script>
 
