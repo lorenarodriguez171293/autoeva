@@ -25,7 +25,8 @@
     .small{font-size:.85rem}
     @media(max-width:720px){.row{grid-template-columns:1fr}}
   </style>
-  <!-- SheetJS for XLSX export -->
+
+  <!-- SheetJS para exportar XLSX -->
   <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 </head>
 <body>
@@ -67,7 +68,7 @@
         </div>
         <div class="full">
           <label>2) Breve: Explica un beneficio y un desafío de los biocombustibles en Argentina.</label>
-          <textarea id="b2" placeholder="Respuesta corta..." required></textarea>
+          <textarea id="b2" required></textarea>
         </div>
 
         <!-- HIDROELECTRICA -->
@@ -196,7 +197,6 @@
           </select>
         </div>
 
-        <!-- PREGUNTAS -->
         <div class="full"><h3>Piensa y responde</h3></div>
 
         <div class="full">
@@ -223,25 +223,61 @@
           <label>20) Desde tu punto de vista, ¿qué rol debería tener la energía nuclear en la Argentina del futuro? Justifica tu respuesta con argumentos técnicos o sociales.</label>
           <textarea id="o5" required></textarea>
         </div>
-    </div>
+      </div>
 
-    <div id="msg" style="margin-top:12px"></div>
+      <div id="msg" style="margin-top:12px"></div>
+    </form>
+
+    <!-- Panel admin -->
+    <div id="adminPanel" class="card" style="margin-top:24px; display:none">
+      <h3>Panel docente</h3>
+
+      <!-- contraseña admin -->
+      <label>Clave de acceso</label>
+      <input id="adminPass" type="password">
+      <button class="btn" onclick="unlockAdmin()">Ingresar</button>
+
+      <div id="adminContent" style="display:none; margin-top:16px">
+
+        <h4>Exportar respuestas</h4>
+
+        <button class="btn" onclick="downloadCSVAll()">Descargar todo en CSV</button>
+
+        <!-- Activar Excel -->
+        <div style="margin-top:12px">
+          <label>Clave para activar Excel</label>
+          <input id="excelCode" type="password" placeholder="Código para activar/desactivar">
+          <button class="btn" onclick="toggleExcel()">Activar / Desactivar Excel</button>
+        </div>
+
+        <!-- Botón Excel (se muestra solo si está activado) -->
+        <div id="excelButtonWrap" style="margin-top:12px; display:none">
+          <button class="btn" onclick="downloadXLSXAll()">Descargar todo en Excel (.xlsx)</button>
+        </div>
+
+        <h4>Respuestas registradas</h4>
+        <div id="tableWrap"></div>
+
+        <button class="btn" style="margin-top:12px; background:#d33" onclick="clearSubmissions()">Borrar todo</button>
+      </div>
+    </div>
   </div>
 
   <script>
-    // Configuración simple (cambiar según convenga)
-    const ADMIN_PASSWORD = 'profeprofe'; // Cambiar antes de usar en producción
+    const ADMIN_PASSWORD = 'profeprofe';
+    const XLSX_ENABLED_CODE = 'activarExcel123';
+
     const STORAGE_KEY = 'submissions_alt_energies_v1';
+    const EXCEL_FLAG_KEY = 'excel_enabled';
 
-    // Cargar envíos previos
     function loadSubmissions(){
-      try{
-        return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
-      }catch(e){return []}
+      try{ return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'); }
+      catch(e){ return []; }
     }
-    function saveSubmissions(arr){ localStorage.setItem(STORAGE_KEY, JSON.stringify(arr)); }
+    function saveSubmissions(arr){
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(arr));
+    }
 
-    // Manejo de envío
     function handleSubmit(ev){
       ev.preventDefault();
       const data = {
@@ -265,16 +301,19 @@
       subs.push(data);
       saveSubmissions(subs);
 
-      // Ofrecer descarga inmediata del registro individual en CSV
-      downloadCSV([data], `respuesta_${data.name.replace(/\s+/g,'_') || 'anonimo'}_${(new Date()).toISOString().slice(0,19)}.csv`);
+      downloadCSV([data], `respuesta_${data.name.replace(/\s+/g,'_')}_${(new Date()).toISOString().slice(0,19)}.csv`);
 
-      document.getElementById('msg').innerHTML = `<div class='card'><strong>Gracias, ${data.name}.</strong> Tu respuesta se guardó localmente y se descargó una copia en CSV.</div>`;
+      document.getElementById('msg').innerHTML =
+        `<div class='card'><strong>Gracias, ${data.name}.</strong> Tu respuesta se guardó localmente y se descargó una copia en CSV.</div>`;
       document.getElementById('quizForm').reset();
     }
 
     // CSV helpers
-    function escapeCSV(val){ if(val==null) return ''; return '"'+String(val).replace(/"/g,'""')+'"'; }
-    function downloadCSV(rows, filename='respuestas.csv'){
+    function escapeCSV(val){
+      if(val==null) return '';
+      return '"' + String(val).replace(/"/g,'""') + '"';
+    }
+    function downloadCSV(rows, filename){
       if(!rows || rows.length===0) return;
       const headers = Object.keys(rows[0]);
       const lines = [headers.map(escapeCSV).join(',')];
@@ -284,42 +323,12 @@
       const csv = lines.join('\n');
       const blob = new Blob([csv], {type:'text/csv;charset=utf-8;'});
       const url = URL.createObjectURL(blob);
-      const a = document.createElement('a'); a.href = url; a.download = filename; document.body.appendChild(a); a.click(); a.remove();
+      const a = document.createElement('a');
+      a.href = url; a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
       setTimeout(()=>URL.revokeObjectURL(url),2000);
-    }
-
-    // XLSX (SheetJS) export
-    function downloadXLSX(rows, filename='respuestas.xlsx'){
-      if(!rows || rows.length===0) return;
-      const ws = XLSX.utils.json_to_sheet(rows);
-      const wb = XLSX.utils.book_new();
-      XLSX.utils.book_append_sheet(wb, ws, 'Respuestas');
-      XLSX.writeFile(wb, filename);
-    }
-
-    // Admin panel
-    function openAdmin(){
-      document.getElementById('adminPanel').style.display = 'block';
-      document.getElementById('adminPass').value = '';
-      document.getElementById('adminContent').style.display = 'none';
-      document.getElementById('tableWrap').innerHTML = '';
-      window.scrollTo({top:document.getElementById('adminPanel').offsetTop, behavior:'smooth'});
-    }
-    function unlockAdmin(){
-      const pass = document.getElementById('adminPass').value;
-      if(pass !== ADMIN_PASSWORD){ alert('Clave incorrecta'); return; }
-      document.getElementById('adminContent').style.display = 'block';
-      renderTable();
-    }
-
-    function renderTable(){
-      const subs = loadSubmissions();
-      if(subs.length===0){ document.getElementById('tableWrap').innerHTML = '<div class="muted">No hay respuestas registradas.</div>'; return; }
-      const headers = Object.keys(subs[0]);
-      let html = '<table><thead><tr>' + headers.map(h=>`<th>${h}</th>`).join('') + '</tr></thead><tbody>';
-      for(const r of subs){ html += '<tr>' + headers.map(h=>`<td>${(r[h]||'').toString().replace(/</g,'&lt;')}</td>`).join('') + '</tr>'; }
-      html += '</tbody></table>';
-      document.getElementById('tableWrap').innerHTML = html;
     }
 
     function downloadCSVAll(){
@@ -327,20 +336,85 @@
       if(subs.length===0){ alert('No hay respuestas para descargar.'); return; }
       downloadCSV(subs, `todas_respuestas_energias_${(new Date()).toISOString().slice(0,10)}.csv`);
     }
+
+    // XLSX helpers
     function downloadXLSXAll(){
       const subs = loadSubmissions();
-      if(subs.length===0){ alert('No hay respuestas para descargar.'); return; }
-      downloadXLSX(subs, `todas_respuestas_energias_${(new Date()).toISOString().slice(0,10)}.xlsx`);
+      if(subs.length===0){ alert('No hay respuestas.'); return; }
+      const ws = XLSX.utils.json_to_sheet(subs);
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, 'Respuestas');
+      XLSX.writeFile(wb, `todas_respuestas_energias_${(new Date()).toISOString().slice(0,10)}.xlsx`);
+    }
+
+    // Panel admin
+    function openAdmin(){
+      document.getElementById('adminPanel').style.display = 'block';
+      document.getElementById('adminPass').value = '';
+      document.getElementById('adminContent').style.display = 'none';
+      document.getElementById('tableWrap').innerHTML = '';
+      window.scrollTo({top:document.getElementById('adminPanel').offsetTop, behavior:'smooth'});
+    }
+
+    function unlockAdmin(){
+      const pass = document.getElementById('adminPass').value;
+      if(pass !== ADMIN_PASSWORD){
+        alert('Clave incorrecta');
+        return;
+      }
+      document.getElementById('adminContent').style.display = 'block';
+      renderTable();
+      updateExcelButtonVisibility();
+    }
+
+    function renderTable(){
+      const subs = loadSubmissions();
+      if(subs.length===0){
+        document.getElementById('tableWrap').innerHTML = '<div class="muted">No hay respuestas registradas.</div>';
+        return;
+      }
+      const headers = Object.keys(subs[0]);
+      let html = '<table><thead><tr>' +
+        headers.map(h=>`<th>${h}</th>`).join('') +
+        '</tr></thead><tbody>';
+      for(const r of subs){
+        html += '<tr>' +
+          headers.map(h=>`<td>${(r[h]||'').toString().replace(/</g,'&lt;')}</td>`).join('') +
+          '</tr>';
+      }
+      html += '</tbody></table>';
+      document.getElementById('tableWrap').innerHTML = html;
     }
 
     function clearSubmissions(){
-      if(!confirm('¿Borrar todas las respuestas registradas? Esta acción no se puede deshacer.')) return;
+      if(!confirm('¿Borrar todas las respuestas?')) return;
       localStorage.removeItem(STORAGE_KEY);
       renderTable();
       alert('Respuestas borradas.');
     }
 
-    // Init: nothing to do
+    // Activar/desactivar Excel
+    function toggleExcel(){
+      const code = document.getElementById('excelCode').value;
+      if(code !== XLSX_ENABLED_CODE){
+        alert('Código incorrecto');
+        return;
+      }
+      const current = localStorage.getItem(EXCEL_FLAG_KEY) === 'true';
+      localStorage.setItem(EXCEL_FLAG_KEY, (!current).toString());
+      updateExcelButtonVisibility();
+      alert(`Excel ahora está ${!current ? 'ACTIVADO' : 'DESACTIVADO'}.`);
+    }
+
+    function updateExcelButtonVisibility(){
+      const enabled = localStorage.getItem(EXCEL_FLAG_KEY) === 'true';
+      document.getElementById('excelButtonWrap').style.display = enabled ? 'block' : 'none';
+    }
   </script>
+
+  <footer style="text-align:center;margin-top:24px">
+    <div class="admin-open" onclick="openAdmin()">Panel docente</div>
+  </footer>
+
 </body>
 </html>
